@@ -7,7 +7,7 @@
         "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
-        "tauri": "tauri",
+        "tauri": "./.cargo.sh && tauri",
         "postinstall": "patch-package"
     },
     "dependencies": {

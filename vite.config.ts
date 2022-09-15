@@ -5,13 +5,6 @@ import { viteExternalsPlugin } from 'vite-plugin-externals'
 import Pages from 'vite-plugin-pages'
 // https://vitejs.dev/config/
 export default defineConfig({
-  build:{
-    rollupOptions:{
-      output:{
-        minifyInternalExports: true,
-      }
-    }
-  },
   plugins: [react(), VitePluginFonts({
     google: {
       families: ['Josefin Sans'],

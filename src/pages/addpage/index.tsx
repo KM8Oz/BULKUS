@@ -10,7 +10,6 @@ import styled from "styled-components";
 import { emit } from '@tauri-apps/api/event';
 
 export default function AddPage(props: any) {
-    // console.log("AddPage");
     const [listemails, setListEmails] = useState<string>("");
     const [thisunlisten, setunlisten] = useState<UnlistenFn>(null as any);
     const [isloading, setLoading] = useState(false);

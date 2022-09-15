@@ -79,7 +79,7 @@ async fn export_xlsx(
 }
 
 fn main() {
-    fix_path_env::fix();
+    // fix_path_env::fix();
     tauri::Builder::default()
         .manage(Database {})
         .plugin(PluginBuilder::default().build())
