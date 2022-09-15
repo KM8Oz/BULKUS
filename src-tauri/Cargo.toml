@@ -27,7 +27,7 @@ tokio = { version = "1.18.2", features = ["full"] }
 check-if-email-exists = { path = "./check-if-email-exists" } 
 # ctor = "0.1.23"
 # mailchecker = "5.0.0"
-fix-path-env ={ git = "https://github.com/tauri-apps/fix-path-env-rs" }
+fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
 
 # async-smtp = "0.5.0"
 tauri-plugin-store =  { git = "https://github.com/tauri-apps/tauri-plugin-store" }

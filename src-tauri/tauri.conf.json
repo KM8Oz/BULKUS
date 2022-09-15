@@ -42,8 +42,8 @@
                 "exceptionDomain": "kmoz.dev",
                 "minimumSystemVersion": "10.13",
                 "frameworks": [],
-                "providerShortName": "OLDI-K, OOO",
-                "signingIdentity": "C0A1DCABFEB2797500805EDA6B3E060718AFB665"  
+                "providerShortName": "Artem Semenov",
+                "signingIdentity": "DD0B51BEE9D02E2A5DA4D84ACADAB8CF3D11C9F6"  
             },
             "resources": [],
             "shortDescription": "",
