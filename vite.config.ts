@@ -1,10 +1,17 @@
-import { defineConfig } from 'vite'
+import { build, defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePluginFonts } from 'vite-plugin-fonts'
 import { viteExternalsPlugin } from 'vite-plugin-externals'
 import Pages from 'vite-plugin-pages'
 // https://vitejs.dev/config/
 export default defineConfig({
+  build:{
+    rollupOptions:{
+      output:{
+        minifyInternalExports: true,
+      }
+    }
+  },
   plugins: [react(), VitePluginFonts({
     google: {
       families: ['Josefin Sans'],

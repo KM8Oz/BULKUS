@@ -1,4 +1,4 @@
-#![allow(missing_docs)]
+#![allow(missing_docs, unused_must_use)]
 #![cfg_attr(
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
@@ -10,6 +10,7 @@ use std::{
     path::Path,
     str::FromStr, thread,
 };
+
 use std::sync::mpsc;
 use std::sync::mpsc::{Sender, Receiver};
 use futures::executor::block_on;
@@ -78,6 +79,7 @@ async fn export_xlsx(
 }
 
 fn main() {
+    fix_path_env::fix();
     tauri::Builder::default()
         .manage(Database {})
         .plugin(PluginBuilder::default().build())

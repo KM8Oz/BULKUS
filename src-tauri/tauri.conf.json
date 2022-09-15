@@ -21,8 +21,8 @@
         },
         "bundle": {
             "active": true,
-            "category": "DeveloperTool",
-            "copyright": "",
+            "category": "Productivity",
+            "copyright": "Copyright @ OLDI-K, OOO 2022, All rights reserved",
             "deb": {
                 "depends": []
             },
@@ -43,7 +43,7 @@
                 "minimumSystemVersion": "10.13",
                 "frameworks": [],
                 "providerShortName": "OLDI-K, OOO",
-                "signingIdentity": "C0A1DCABFEB2797500805EDA6B3E060718AFB665"
+                "signingIdentity": "C0A1DCABFEB2797500805EDA6B3E060718AFB665"  
             },
             "resources": [],
             "shortDescription": "",

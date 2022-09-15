@@ -100,7 +100,6 @@ export default function AddPage(props: any) {
                 ri++
             }
     }
-   
 
     const save = ()=>{
         EmailsDB.set("saved_"+Date.now(), validlistemails);
