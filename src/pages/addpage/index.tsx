@@ -1,4 +1,4 @@
-import { listen } from '@tauri-apps/api/event';
+import { listen, UnlistenFn } from '@tauri-apps/api/event';
 import React, { useEffect, useState } from "react";
 import { ContentEditableEvent } from "react-contenteditable";
 import PastIcon from "../../icons/PastIcon";
@@ -7,10 +7,12 @@ import { readText } from '@tauri-apps/api/clipboard';
 import { checkemails, EmailsDB, fastcheckemails, SettingsDB, sleep } from "../../tools";
 import { useFetching } from "../../hooks/fetcher";
 import styled from "styled-components";
+import { emit } from '@tauri-apps/api/event';
+
 export default function AddPage(props: any) {
     // console.log("AddPage");
     const [listemails, setListEmails] = useState<string>("");
-    const [thisunlisten, setunlisten] = useState<any>(null);
+    const [thisunlisten, setunlisten] = useState<UnlistenFn>(null as any);
     const [isloading, setLoading] = useState(false);
     const [validlistemails, setValidListEmails] = useState<any[]>([]);
     const [validlist, setValidList] = useState<any[]>([]);
@@ -61,29 +63,35 @@ export default function AddPage(props: any) {
             var r = await EmailsDB.get("last_checked_emails_html") as string;
             var ri = 0;
             for (const part of reslist) {
-                await checkemails({
+                await emit('checkemails', {
                     emails: part || [""], 
                     sender: settings.sender, 
                     proxyurl: settings.proxyurl, 
                     smtptimout: settings.smtptimout
-                }).then(async (reachable)=>{
-                    setValidListEmails(s=>s?.concat(reachable).map(s=>s));
-                    for (const element of reachable) {
-                        r = r?.replace(element.email,`<p class="validation-${element.status}">${element.email}</p>`);
-                        setListEmails(r);
-                        if(r != ""){
-                            await EmailsDB.set("last_checked_emails_html", r);
-                            await EmailsDB.save()
-                        }
-                        await sleep(300)
-                    }
-                    // setListEmails(reachable.map(element=>`<p class="validation-${element.status}">${element.email}</p>`).join(" - "));
-                }).catch((err)=>{
-                    console.log(err);
-                })
-                .finally(()=>{
-                    console.log("job done!");
-                })
+                });
+                // await checkemails({
+                //     emails: part || [""], 
+                //     sender: settings.sender, 
+                //     proxyurl: settings.proxyurl, 
+                //     smtptimout: settings.smtptimout
+                // }).then(async (reachable)=>{
+                //     // setValidListEmails(s=>s?.concat(reachable).map(s=>s));
+                //     // for (const element of reachable) {
+                //     //     r = r?.replace(element.email,`<p class="validation-${element.status}">${element.email}</p>`);
+                //     //     setListEmails(r);
+                //     //     if(r != ""){
+                //     //         await EmailsDB.set("last_checked_emails_html", r);
+                //     //         await EmailsDB.save()
+                //     //     }
+                //     //     await sleep(300)
+                //     // }
+                //     // setListEmails(reachable.map(element=>`<p class="validation-${element.status}">${element.email}</p>`).join(" - "));
+                // }).catch((err)=>{
+                //     console.log(err);
+                // })
+                // .finally(()=>{
+                //     console.log("job done!");
+                // })
                 await sleep(500)
                 if(ri >= reslist.length-1){
                     setLoading(false)
@@ -111,10 +119,21 @@ export default function AddPage(props: any) {
             getsettings().then(()=>{
                 console.log("settings loaded!");
             })
-            const unlisten = await listen<string>('error', (event) => {
-                console.log(`Got error in window ${event.windowLabel}, payload: ${event.payload}`);
+            const unlisten = await listen<any>('next_pack', async (event) => {
+                console.log(`event.payload:${event.payload[0]}`);
+                var r = await EmailsDB.get("last_checked_emails_html") as string;
+                let reachable = event.payload;
+                setValidListEmails(s=>s?.concat(reachable).map(s=>s));
+                for (const element of reachable) {
+                    r = r?.replace(element.email,`<p class="validation-${element.status}">${element.email}</p>`);
+                    setListEmails(r);
+                    if(r != ""){
+                        await EmailsDB.set("last_checked_emails_html", r);
+                        await EmailsDB.save()
+                    }
+                }
               });
-            setunlisten(unlisten);
+            // setunlisten(unlisten);
               // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
         })()
         // return ()=>{

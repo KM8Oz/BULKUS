@@ -8,9 +8,11 @@
 use std::{
     fs::{self, DirEntry, ReadDir},
     path::Path,
-    str::FromStr,
+    str::FromStr, thread,
 };
-
+use std::sync::mpsc;
+use std::sync::mpsc::{Sender, Receiver};
+use futures::executor::block_on;
 use serde_json::{de, json};
 use tauri::Manager;
 use tauri_plugin_store::PluginBuilder;
@@ -26,6 +28,11 @@ pub struct PassedData {
     proxyurl: Option<String>,
     smtptimout: Option<i64>,
 }
+// #[derive(Clone, serde::Serialize)]
+// struct Payload {
+//   result: Vec<Reachable>,
+// }
+
 #[tauri::command]
 async fn checkemails(
     window: tauri::Window,
@@ -38,15 +45,15 @@ async fn checkemails(
         proxyurl: data.proxyurl,
         smpttimeout: data.smtptimout,
     };
-    println!("{:?}", fetcher);
+    // println!("{:?}", fetcher);
     let result = fetcher.checkemails().await;
     Ok(result)
 }
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 struct SendedData {
-  date: String,
-  array: Vec<Vec<String>>,
-  file_path: String,
+    date: String,
+    array: Vec<Vec<String>>,
+    file_path: String,
 }
 #[tauri::command]
 async fn export_xlsx(
@@ -54,12 +61,17 @@ async fn export_xlsx(
     data: String,
     database: tauri::State<'_, Database>,
 ) -> Result<(), String> {
-    let my_json = serde_json::from_str::<SendedData>(data.as_str()).expect("could not parse data sended!");
-    let array = my_json.array.iter().map(|s|(s[0].clone(), s[1].clone(), s[2].clone(), s[3].clone())).collect::<Vec<(String, String, String, String)>>();
-    print!("json : {:?}", array);
+    let my_json =
+        serde_json::from_str::<SendedData>(data.as_str()).expect("could not parse data sended!");
+    let array = my_json
+        .array
+        .iter()
+        .map(|s| (s[0].clone(), s[1].clone(), s[2].clone(), s[3].clone()))
+        .collect::<Vec<(String, String, String, String)>>();
+    // print!("json : {:?}", array);
     let this_data = Data {
         date: my_json.date,
-        array
+        array,
     };
     exel::export_to_xlsx(this_data, my_json.file_path);
     Ok(())
@@ -76,7 +88,34 @@ fn main() {
         ])
         .setup(|app| {
             // let window: &dyn raw_window_handle::HasRawWindowHandle = unsafe { std::mem::zeroed() }
-            let window = app.get_window("main").unwrap();
+            let main_window = app.get_window("main").unwrap();
+            let (tx, rx): (Sender<Vec<Reachable>>, Receiver<Vec<Reachable>>) = mpsc::channel();
+            // listen to the `event-name` (emitted on the `main` window)
+            let main = main_window.clone();
+            let id = main_window.listen("checkemails", move |event| {
+                let data = event.payload().expect("no data passed");
+                let _data:PassedData =  serde_json::from_str(data).expect("can't parse data!");
+                let fetcher = Reachables {
+                    listemails: _data.emails,
+                    sender: _data.sender,
+                    proxyurl: _data.proxyurl,
+                    smpttimeout: _data.smtptimout,
+                };
+                let thread_tx = tx.clone();
+                let child = thread::spawn(move || {
+                    block_on(async {
+                        // ok
+                        let res = fetcher.checkemailsbulk().await;
+                          // emit the `event-name` event to the `main` window
+                          thread_tx.clone().send(res).unwrap();
+                    });
+                });                      // emit the `event-name` event to the `main` window
+                let result = rx.recv().expect("oops! the recv() panicked");
+                main.emit_all("next_pack", result).unwrap();
+            });
+            // unlisten to the event using the `id` returned on the `listen` function
+            // an `once` API is also exposed on the `Window` struct
+            // main_window.unlisten(id);
             // set_shadow(window, true).expect("Unsupported platform!");
             Ok(())
         })
