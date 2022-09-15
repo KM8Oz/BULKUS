@@ -1,3 +1,4 @@
+import { listen } from '@tauri-apps/api/event';
 import React, { useEffect, useState } from "react";
 import { ContentEditableEvent } from "react-contenteditable";
 import PastIcon from "../../icons/PastIcon";
@@ -9,6 +10,7 @@ import styled from "styled-components";
 export default function AddPage(props: any) {
     // console.log("AddPage");
     const [listemails, setListEmails] = useState<string>("");
+    const [thisunlisten, setunlisten] = useState<any>(null);
     const [isloading, setLoading] = useState(false);
     const [validlistemails, setValidListEmails] = useState<any[]>([]);
     const [validlist, setValidList] = useState<any[]>([]);
@@ -32,6 +34,7 @@ export default function AddPage(props: any) {
     let match = new RegExp(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,5}\b/gi);
     const past = () => {
         readText().then(async (text) => {
+            // console.log(text);
             let pasted_emails = Array.from(String(text || "").matchAll(match)).map(s => s[0]);
             if(pasted_emails){
                 await EmailsDB.set("last_checked_emails_html", Array.from(String(text || "")?.replace(/[,'"!`]/g, "").matchAll(match)).join(" "));
@@ -89,6 +92,8 @@ export default function AddPage(props: any) {
                 ri++
             }
     }
+   
+
     const save = ()=>{
         EmailsDB.set("saved_"+Date.now(), validlistemails);
         // console.log(EmailsDB.keys);
@@ -96,16 +101,25 @@ export default function AddPage(props: any) {
         setSaving(false)
     }
     useEffect(()=>{
-        EmailsDB.load().then(async ()=>{
-            let allhtml = await EmailsDB.get("last_checked_emails_html") as any;
-            if(allhtml && !listemails){
-                setListEmails(allhtml)
-            }
-        })
-        getsettings().then(()=>{
-            console.log("settings loaded!");
-        })
-        
+        (async ()=>{
+            EmailsDB.load().then(async ()=>{
+                let allhtml = await EmailsDB.get("last_checked_emails_html") as any;
+                if(allhtml && !listemails){
+                    setListEmails(allhtml)
+                }
+            })
+            getsettings().then(()=>{
+                console.log("settings loaded!");
+            })
+            const unlisten = await listen<string>('error', (event) => {
+                console.log(`Got error in window ${event.windowLabel}, payload: ${event.payload}`);
+              });
+            setunlisten(unlisten);
+              // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
+        })()
+        // return ()=>{
+        //     thisunlisten();
+        // }
     }, [])
     return (
         <Global.Cbody>

@@ -17,14 +17,6 @@
                 "scope": [
                     "**"
                 ]
-            },
-            "notification": {
-                "all": true 
-              },
-            "dialog": {
-                "all": true, 
-                "open": true,
-                "save": true 
             }
         },
         "bundle": {
@@ -46,7 +38,7 @@
             "longDescription": "",
             "macOS": {
                 "license": "./LICENCE",
-                "entitlements": null,
+                "entitlements": "./entitlements.plist",
                 "exceptionDomain": "kmoz.dev",
                 "minimumSystemVersion": "10.13",
                 "frameworks": [],
