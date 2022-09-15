@@ -1,0 +1,47 @@
+[package]
+name = "app"
+version = "0.1.0"
+description = "Bulk Email Compain"
+authors = ["km8oz"]
+license = ""
+repository = ""
+default-run = "app"
+edition = "2021"
+rust-version = "1.57"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "1.0.4", features = [] }
+
+[dependencies]
+serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
+futures = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.0.5", features = ["api-all", "macos-private-api"] }
+# window-shadows = "0.2.0"
+umya-spreadsheet = "0.8.1"
+rand = "0.8.5"
+tokio = { version = "1.18.2", features = ["full"] }
+# tokio = "1.6"
+check-if-email-exists = { path = "./check-if-email-exists" } 
+# ctor = "0.1.23"
+# mailchecker = "5.0.0"
+# async-smtp = "0.5.0"
+tauri-plugin-store =  { git = "https://github.com/tauri-apps/tauri-plugin-store" }
+# tauri-plugin-stronghold =  { git = "https://github.com/tauri-apps/tauri-plugin-stronghold" }
+# emailx = "0.1"
+# raw-window-handle = "0.5.0"
+# [patch.crates-io]
+# aesni = { git = "https://github.com/RustCrypto/block-ciphers/", rev = "268dadc93df08928de3bc510ddf20aabfcc49435" }
+# aes-soft = { git = "https://github.com/RustCrypto/block-ciphers/", rev = "268dadc93df08928de3bc510ddf20aabfcc49435" }
+[features]
+# by default Tauri runs in production mode
+# when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
+default = [ "custom-protocol" ]
+# this feature is used used for production builds where `devPath` points to the filesystem
+# DO NOT remove this
+custom-protocol = [ "tauri/custom-protocol" ]
+
+[profile.release]
+strip = true  # Automatically strip symbols from the binary.

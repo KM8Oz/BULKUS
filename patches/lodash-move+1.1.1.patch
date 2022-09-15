@@ -1,0 +1,7 @@
+diff --git a/node_modules/lodash-move/index.d.ts b/node_modules/lodash-move/index.d.ts
+new file mode 100644
+index 0000000..9addc98
+--- /dev/null
++++ b/node_modules/lodash-move/index.d.ts
+@@ -0,0 +1 @@
++export default function move(arr: any[], i:number, d:number): any[];

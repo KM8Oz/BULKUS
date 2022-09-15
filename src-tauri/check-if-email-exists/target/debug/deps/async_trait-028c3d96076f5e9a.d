@@ -1,0 +1,10 @@
+/Users/novyjpolzovatel/bulk-email-compain/src-tauri/check-if-email-exists/target/debug/deps/libasync_trait-028c3d96076f5e9a.dylib: /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/lib.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/args.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/expand.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/lifetime.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/parse.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/receiver.rs
+
+/Users/novyjpolzovatel/bulk-email-compain/src-tauri/check-if-email-exists/target/debug/deps/async_trait-028c3d96076f5e9a.d: /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/lib.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/args.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/expand.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/lifetime.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/parse.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/receiver.rs
+
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/lib.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/args.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/expand.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/lifetime.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/parse.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.57/src/receiver.rs:

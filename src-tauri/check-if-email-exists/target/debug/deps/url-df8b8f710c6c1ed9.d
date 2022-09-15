@@ -1,0 +1,11 @@
+/Users/novyjpolzovatel/bulk-email-compain/src-tauri/check-if-email-exists/target/debug/deps/url-df8b8f710c6c1ed9.rmeta: /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/lib.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/host.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/origin.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/parser.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/path_segments.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/slicing.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/quirks.rs
+
+/Users/novyjpolzovatel/bulk-email-compain/src-tauri/check-if-email-exists/target/debug/deps/url-df8b8f710c6c1ed9.d: /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/lib.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/host.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/origin.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/parser.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/path_segments.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/slicing.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/quirks.rs
+
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/lib.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/host.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/origin.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/parser.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/path_segments.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/slicing.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/url-2.2.2/src/quirks.rs:

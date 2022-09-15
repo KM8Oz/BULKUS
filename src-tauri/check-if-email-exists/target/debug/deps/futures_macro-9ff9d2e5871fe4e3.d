@@ -1,0 +1,9 @@
+/Users/novyjpolzovatel/bulk-email-compain/src-tauri/check-if-email-exists/target/debug/deps/libfutures_macro-9ff9d2e5871fe4e3.dylib: /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/lib.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/executor.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/join.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/select.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/stream_select.rs
+
+/Users/novyjpolzovatel/bulk-email-compain/src-tauri/check-if-email-exists/target/debug/deps/futures_macro-9ff9d2e5871fe4e3.d: /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/lib.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/executor.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/join.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/select.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/stream_select.rs
+
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/lib.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/executor.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/join.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/select.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.24/src/stream_select.rs:

@@ -1,0 +1,4 @@
+cargo:rustc-cfg=osslconf="OPENSSL_NO_KRB5"
+cargo:rustc-cfg=osslconf="OPENSSL_NO_RFC3779"
+cargo:rustc-cfg=ossl101
+cargo:rustc-cfg=ossl102

@@ -1,0 +1,9 @@
+/Users/novyjpolzovatel/bulk-email-compain/src-tauri/check-if-email-exists/target/debug/deps/futures_lite-eb32b12c3aef9995.rmeta: /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/lib.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/future.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/prelude.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/stream.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/io.rs
+
+/Users/novyjpolzovatel/bulk-email-compain/src-tauri/check-if-email-exists/target/debug/deps/futures_lite-eb32b12c3aef9995.d: /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/lib.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/future.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/prelude.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/stream.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/io.rs
+
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/lib.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/future.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/prelude.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/stream.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-lite-1.12.0/src/io.rs:

@@ -1,0 +1,198 @@
+:root {
+    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+}
+
+a {
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
+}
+
+a:hover {
+    color: #535bf2;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+    border-radius: 0 0 1.2em 1.2em;
+    overflow: hidden;
+    -webkit-user-drag: auto;
+    background-color: #175A6F99;
+}
+
+html {
+    border-radius: 0 0 1.2em 1.2em;
+    overflow: hidden;
+    -webkit-user-drag: auto;
+    background-color: #175A6F99;
+    font-family: Josefin Sans;
+}
+
+h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+}
+
+button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+}
+
+button:hover {
+    border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+     :root {
+        color: #213547;
+        background-color: #ffffff;
+    }
+    a:hover {
+        color: #747bff;
+    }
+    button {
+        background-color: #f9f9f9;
+    }
+}
+
+.titlebar {
+    height: 30px;
+    background: #329ea3;
+    user-select: none;
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.titlebar-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+}
+
+.titlebar-button:hover {
+    background: #5bbec3;
+}
+
+.icon-animated {
+    /* translate: all ease-in-out 500ms; */
+    transition: all ease-in-out 100ms;
+    transform: rotate(0turn) scale(1);
+    cursor: pointer;
+}
+
+.icon-animated:hover {
+    transform: rotate(0.5turn) scale(1);
+}
+
+.icon-animated:active {
+    transform: rotate(0.5turn) scale(.95);
+}
+
+@keyframes zomm0 {
+    0% {
+        transform: scale(.95)
+    }
+    25% {
+        transform: scale(1)
+    }
+    50% {
+        transform: scale(1)
+    }
+    100% {
+        transform: scale(.99)
+    }
+}
+
+@keyframes zomm1 {
+    0% {
+        transform: scale(1)
+    }
+    25% {
+        transform: scale(.95)
+    }
+    50% {
+        transform: scale(1)
+    }
+    100% {
+        transform: scale(1)
+    }
+}
+
+@keyframes zomm2 {
+    0% {
+        transform: scale(1)
+    }
+    25% {
+        transform: scale(1)
+    }
+    50% {
+        transform: scale(.95)
+    }
+    100% {
+        transform: scale(1)
+    }
+}
+
+@keyframes zomm3 {
+    0% {
+        transform: scale(1)
+    }
+    25% {
+        transform: scale(1)
+    }
+    50% {
+        transform: scale(1)
+    }
+    100% {
+        transform: scale(.95)
+    }
+}
+
+.animatedblock0 {
+    animation: zomm0 1s ease-in-out 600ms infinite;
+}
+
+.animatedblock1 {
+    animation: zomm1 1s ease-in-out 600ms infinite;
+}
+
+.animatedblock2 {
+    animation: zomm2 1s ease-in-out 600ms infinite;
+}
+
+.animatedblock3 {
+    animation: zomm3 1s ease-in-out 600ms infinite;
+}

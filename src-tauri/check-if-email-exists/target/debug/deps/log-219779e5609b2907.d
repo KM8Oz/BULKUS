@@ -1,0 +1,12 @@
+/Users/novyjpolzovatel/bulk-email-compain/src-tauri/check-if-email-exists/target/debug/deps/log-219779e5609b2907.rmeta: /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/lib.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/macros.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/serde.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/mod.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/error.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/key.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/source.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/value.rs
+
+/Users/novyjpolzovatel/bulk-email-compain/src-tauri/check-if-email-exists/target/debug/deps/log-219779e5609b2907.d: /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/lib.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/macros.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/serde.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/mod.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/error.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/key.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/source.rs /Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/value.rs
+
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/lib.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/macros.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/serde.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/mod.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/error.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/key.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/source.rs:
+/Users/novyjpolzovatel/.cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.17/src/kv/value.rs:
