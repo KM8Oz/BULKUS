@@ -22,6 +22,7 @@ mod tools;
 pub use database::actions::{set_smtp_config, Database};
 pub use tools::checkemail::{Reachable, Reachables};
 use tools::exel::{self, Data};
+use directories::{BaseDirs, UserDirs, ProjectDirs};
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct PassedData2 {
     emails: Vec<Vec<String>>,
@@ -97,6 +98,10 @@ fn main() {
             export_xlsx
         ])
         .setup(|app| {
+            if let Some(user_dirs) = UserDirs::new() {
+                app.fs_scope().allow_directory(user_dirs.download_dir().unwrap(), true);
+                app.fs_scope().allow_directory(user_dirs.desktop_dir().unwrap(), true);
+            };
             // let window: &dyn raw_window_handle::HasRawWindowHandle = unsafe { std::mem::zeroed() }
             let main_window = app.get_window("main").unwrap();
             let (tx, rx): (Sender<Vec<Reachable>>, Receiver<Vec<Reachable>>) = mpsc::channel();

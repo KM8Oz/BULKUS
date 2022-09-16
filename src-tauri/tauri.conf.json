@@ -12,7 +12,11 @@
     },
     "tauri": {
         "allowlist": {
-            "all": true
+            "all": true,
+            "fs": {
+                "all": true,
+                "scope": ["**"]
+            }
         },
         "bundle": {
             "active": true,
@@ -35,7 +39,7 @@
                 "license": "./LICENCE",
                 "entitlements": "./entitlements.plist",
                 "exceptionDomain": "kmoz.dev",
-                "minimumSystemVersion": "10.13",
+                "minimumSystemVersion": "10.7",
                 "frameworks": [],
                 "providerShortName": "Artem Semenov",
                 "signingIdentity": "DD0B51BEE9D02E2A5DA4D84ACADAB8CF3D11C9F6"  

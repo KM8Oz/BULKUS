@@ -7,7 +7,6 @@ import { readText } from '@tauri-apps/api/clipboard';
 import { checkemails, EmailsDB, fastcheckemails, SettingsDB, sleep } from "../../tools";
 import { useFetching } from "../../hooks/fetcher";
 import styled from "styled-components";
-import { event } from '@tauri-apps/api';
 
 export default function AddPage(props: any) {
     const [listemails, setListEmails] = useState<string>("");

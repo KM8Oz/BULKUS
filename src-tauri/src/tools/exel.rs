@@ -10,6 +10,9 @@ pub struct Data {
 pub fn export_to_xlsx(json: Data, path: String){
     let _path = std::path::Path::new("./templates/template.xlsx");
     let export_path = std::path::Path::new(path.as_str());
+    // let mut extra_path = path.clone();
+    let extra_path = format!("{}.xlsx",path.to_string());
+    let export_path_all = std::path::Path::new(&extra_path);
     let mut template_book = umya_spreadsheet::reader::xlsx::read(_path).unwrap();
     let date = json.date.as_str();
     // set data in the header
@@ -47,7 +50,7 @@ pub fn export_to_xlsx(json: Data, path: String){
             let _ = writer::csv::write(&template_book, export_path, Some(&option));
         },
         _ => {
-            let _ = umya_spreadsheet::writer::xlsx::write(&template_book, export_path);
+            let _ = umya_spreadsheet::writer::xlsx::write(&template_book, export_path_all);
         }
     }
     
