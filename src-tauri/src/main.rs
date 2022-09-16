@@ -13,7 +13,7 @@ use std::{
 
 use std::sync::mpsc;
 use std::sync::mpsc::{Sender, Receiver};
-use futures::executor::block_on;
+use futures::{executor::block_on, future::ok};
 use serde_json::{de, json};
 use tauri::Manager;
 use tauri_plugin_store::PluginBuilder;
@@ -22,6 +22,14 @@ mod tools;
 pub use database::actions::{set_smtp_config, Database};
 pub use tools::checkemail::{Reachable, Reachables};
 use tools::exel::{self, Data};
+#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
+pub struct PassedData2 {
+    emails: Vec<Vec<String>>,
+    sender: Option<String>,
+    proxyurl: Option<String>,
+    smtptimout: Option<i64>,
+}
+
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct PassedData {
     emails: Vec<String>,
@@ -96,24 +104,28 @@ fn main() {
             let main = main_window.clone();
             let id = main_window.listen("checkemails", move |event| {
                 let data = event.payload().expect("no data passed");
-                let _data:PassedData =  serde_json::from_str(data).expect("can't parse data!");
-                let fetcher = Reachables {
-                    listemails: _data.emails,
-                    sender: _data.sender,
-                    proxyurl: _data.proxyurl,
-                    smpttimeout: _data.smtptimout,
-                };
-                let thread_tx = tx.clone();
-                let child = thread::spawn(move || {
-                    block_on(async {
-                        // ok
-                        let res = fetcher.checkemailsbulk().await;
-                          // emit the `event-name` event to the `main` window
-                          thread_tx.clone().send(res).unwrap();
-                    });
-                });                      // emit the `event-name` event to the `main` window
-                let result = rx.recv().expect("oops! the recv() panicked");
-                main.emit_all("next_pack", result).unwrap();
+                let _data:PassedData2 =  serde_json::from_str(data).expect("can't parse data!");
+                for list in _data.emails {
+                    // parts...
+                    let fetcher = Reachables {
+                        listemails: list,
+                        sender: _data.sender.clone(),
+                        proxyurl: _data.proxyurl.clone(),
+                        smpttimeout: _data.smtptimout,
+                    };
+                    let thread_tx = tx.clone();
+                    let child = thread::spawn(move || {
+                        block_on(async {
+                            // ok
+                            let res = fetcher.checkemailsbulk().await;
+                              // emit the `event-name` event to the `main` window
+                              thread_tx.clone().send(res).unwrap();
+                        });
+                    });                      // emit the `event-name` event to the `main` window
+                    let result = rx.recv().expect("oops! the recv() panicked");
+                    main.emit_all("next_pack", result).unwrap();
+                }
+                main.emit_all("job_done", "DONE".to_string()).unwrap();
             });
             // unlisten to the event using the `id` returned on the `listen` function
             // an `once` API is also exposed on the `Window` struct

@@ -75,7 +75,9 @@ export default ({ ...props }) => {
         <Wrapper>
             <Title>Settings:</Title>
             <Argument>
-                <span>
+                <span style={{
+                    color: "#000"
+                }}>
                     Sender:
                 </span>
                 <Input type={"text"} value={String(settings.sender || "")} placeholder="Sender: example@domain.com" onChange={(m) => {
@@ -85,7 +87,9 @@ export default ({ ...props }) => {
                 }} />
             </Argument>
             <Argument>
-                <span>
+                <span style={{
+                    color: "#000"
+                }}>
                     concurance : <kbd>{settings.concurance}</kbd>
                 </span>
                 <Input type={"range"} min="1" max="20" onChange={(m) => {
@@ -97,7 +101,9 @@ export default ({ ...props }) => {
                     step="1" placeholder="concurance: max - 5 | min - 1" />
             </Argument>
             <Argument>
-                <span>
+                <span style={{
+                    color: "#000"
+                }}>
                     smtp timeout: <kbd>{settings.smtptimout}</kbd>
                 </span>
                 <Input type={"range"} min="100" max="1000" name="smtptimeout" onChange={(m) => {
@@ -108,7 +114,9 @@ export default ({ ...props }) => {
                 <output htmlFor="smtptimeout" aria-valuetext={String(settings.smtptimout)} ></output>
             </Argument>
             <Argument>
-                <span>
+                <span style={{
+                    color: "#000"
+                }}>
                     Proxy:
                 </span>
                 <GroupInputs>
@@ -127,7 +135,9 @@ export default ({ ...props }) => {
                 </GroupInputs>
             </Argument>
             <Argument>
-                <span>
+                <span style={{
+                    color: "#000"
+                }}>
                     keygen:
                 </span>
                 <GroupInputs>

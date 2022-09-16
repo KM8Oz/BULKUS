@@ -10,7 +10,7 @@ import { useSpring } from "react-spring";
 import { PieChart } from 'react-minimal-pie-chart';
 import ReactJson from 'react-json-view'
 import { save } from '@tauri-apps/api/dialog';
-import { downloadDir } from "@tauri-apps/api/path";
+import { downloadDir, publicDir } from "@tauri-apps/api/path";
 const to_object = (json: any) => {
     try {
         return JSON.parse(json)
@@ -90,12 +90,15 @@ const Item = ({ date, invalid, safe, risky, object }: { date: string, invalid: n
             defaultPath:dd,
             title: "Save summery |"+date,
             filters: [{
-              name: 'ValidedExcelFormat_'+Date.now(),
+              name: '*',
               extensions: ['xlsx', 'csv']
             }]
           }); 
          export_to_exel(JSON.stringify({array, date, file_path:filePath})).then((s)=>{
             notify("Saved", "Success")
+         })
+         .catch((eer)=>{
+            notify("Saving", "Error accured: \n"+eer)
          })
     }
     return (
@@ -136,7 +139,8 @@ const Item = ({ date, invalid, safe, risky, object }: { date: string, invalid: n
                 />
                 <span style={{
                     fontSize: 14,
-                    userSelect: "none"
+                    userSelect: "none",
+                    color: "#000"
                 }}>
                     {
                         date

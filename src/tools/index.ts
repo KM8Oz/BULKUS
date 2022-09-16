@@ -2,6 +2,7 @@
 import { invoke } from '@tauri-apps/api/tauri'
 import { Store } from "tauri-plugin-store-api";
 import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
+// import {  } from '@tauri-apps/api/fs';
 import { OsType, type, platform, Platform } from '@tauri-apps/api/os';
 import macos_icon from '../assets/notification-icon.icns?raw';
 // import macos_icon from '../assets/notification-icon.jpg?raw';

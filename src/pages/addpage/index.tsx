@@ -1,4 +1,4 @@
-import { listen, UnlistenFn } from '@tauri-apps/api/event';
+import { listen, UnlistenFn, emit } from '@tauri-apps/api/event';
 import React, { useEffect, useState } from "react";
 import { ContentEditableEvent } from "react-contenteditable";
 import PastIcon from "../../icons/PastIcon";
@@ -7,7 +7,7 @@ import { readText } from '@tauri-apps/api/clipboard';
 import { checkemails, EmailsDB, fastcheckemails, SettingsDB, sleep } from "../../tools";
 import { useFetching } from "../../hooks/fetcher";
 import styled from "styled-components";
-import { emit } from '@tauri-apps/api/event';
+import { event } from '@tauri-apps/api';
 
 export default function AddPage(props: any) {
     const [listemails, setListEmails] = useState<string>("");
@@ -61,13 +61,14 @@ export default function AddPage(props: any) {
             , []);
             var r = await EmailsDB.get("last_checked_emails_html") as string;
             var ri = 0;
-            for (const part of reslist) {
-                await emit('checkemails', {
-                    emails: part || [""], 
-                    sender: settings.sender, 
-                    proxyurl: settings.proxyurl, 
-                    smtptimout: settings.smtptimout
-                });
+            await emit('checkemails', {
+                emails: reslist || [""], 
+                sender: settings.sender, 
+                proxyurl: settings.proxyurl, 
+                smtptimout: settings.smtptimout
+            });
+            // for (const part of reslist) {
+                
                 // await checkemails({
                 //     emails: part || [""], 
                 //     sender: settings.sender, 
@@ -91,13 +92,13 @@ export default function AddPage(props: any) {
                 // .finally(()=>{
                 //     console.log("job done!");
                 // })
-                await sleep(500)
-                if(ri >= reslist.length-1){
-                    setLoading(false)
-                    setSaving(true)
-                }
-                ri++
-            }
+            //     await sleep(500)
+            //     if(ri >= reslist.length-1){
+            //         setLoading(false)
+            //         setSaving(true)
+            //     }
+            //     ri++
+            // }
     }
 
     const save = ()=>{
@@ -118,7 +119,7 @@ export default function AddPage(props: any) {
                 console.log("settings loaded!");
             })
             const unlisten = await listen<any>('next_pack', async (event) => {
-                console.log(`event.payload:${event.payload[0]}`);
+                // console.log(`event.payload:${event.payload[0]}`);
                 var r = await EmailsDB.get("last_checked_emails_html") as string;
                 let reachable = event.payload;
                 setValidListEmails(s=>s?.concat(reachable).map(s=>s));
@@ -131,7 +132,13 @@ export default function AddPage(props: any) {
                     }
                 }
               });
-            // setunlisten(unlisten);
+              const unlistenjob_done = await listen<any>('job_done', async (event) => {
+                    setLoading(false)
+                    setSaving(true)
+                    unlisten()
+                    unlistenjob_done()
+              });
+              // setunlisten(unlisten);
               // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
         })()
         // return ()=>{
