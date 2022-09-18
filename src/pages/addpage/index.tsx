@@ -252,6 +252,7 @@ export default function AddPage(props: any) {
             })
             const unlisten = await listen<any>('next_pack', async (event) => {
                 // console.log(`event.payload:${event.payload[0]}`);
+                setLoading(true)
                 var r = await EmailsDB.get("last_checked_emails_html") as string;
                 var list = await EmailsDB.get("valid_emails") as any[] || [];
                 let reachable = event.payload;
