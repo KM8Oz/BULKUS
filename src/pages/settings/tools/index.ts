@@ -1,4 +1,4 @@
-import { checkemails, match_email, SettingsDB } from "../../../tools";
+import { checkemails, match_email } from "../../../tools";
 
 enum Responce {
     regex="regex",
@@ -7,9 +7,9 @@ enum Responce {
 }
 class Settings {
     constructor(){
-      SettingsDB.load().then(()=>{
-        console.log("settings database is loaded");
-      })
+      // SettingsDB.load().then(()=>{
+      //   console.log("settings database is loaded");
+      // })
     }
     /***
      * @email string // sender email 
