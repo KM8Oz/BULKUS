@@ -12,6 +12,7 @@ import { pathsemailssmy, pathsettingsmy, unlistner } from '../../tools/catch';
 import { Store } from 'tauri-plugin-store-api';
 import { animated, AnimatedComponent, easings, useSpring } from 'react-spring';
 import { useNavigate } from 'react-router-dom';
+import { RingLoader } from 'react-spinners';
 
 const CloseBtn = styled.div`
   width: 30px;
@@ -271,11 +272,12 @@ export default function AddPage(props: any) {
                 var list = await EmailsDB.get("valid_emails") as any[] || [];
                 let reachable = event.payload;
                 setValidListEmails(s=>s?.concat(reachable).map(s=>s));
-                setPercentage(s=>{
-                    let all = r.split(" ").length;
-                    let valid = list.length;
-                    return (valid/all)*100
-                })
+                // setPercentage(s=>{
+                //     let all = listemails.split(" ").length;
+                //     let valid = list.length;
+                //     let perc = (valid/all)*100;
+                //     return Number(Number(perc>100?0:perc).toFixed())
+                // })
                 list=list.concat(reachable).map((s: any)=>s);
                 if(list) await EmailsDB.set("valid_emails", list);
                 for await (const element of reachable) {
@@ -329,11 +331,20 @@ export default function AddPage(props: any) {
                 percentage={20}
                 style={{
                     // backgroundColor: isloading ? "linear-gradient(180deg, #85C008 0%, #114353 100%)":"linear-gradient(180deg, #175A6F 0%, #114353 100%)",
-                    alignSelf: "flex-end"
+                    alignSelf: "flex-end",
+                    position:"relative"
                 }} 
                 width={250} 
                 fontsize={20} 
-            >Stop {perscentage > 0 ? perscentage+"%" : ""}</Global.SaveBtn>}
+            >Stop <RingLoader
+             style={{
+                position: 'absolute',
+                right: 40,
+                top:11
+             }}
+            color="#e4e4e4"
+            size={25}
+             /></Global.SaveBtn>}
             {is_saving && <Global.SaveBtn
                 loading={isloading ? 1 : 0}
                 onClick={save}

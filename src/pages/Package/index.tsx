@@ -26,12 +26,11 @@ const to_object = (json: any) => {
 }
 export default function PackagePage(props: any) {
     const [list, setlist] = useState<any[]>([]);
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(true);
     const [reload, setReload] = useState(false);
     useEffect(() => {
         EmailsDB.load().then(async () => {
             let keys = await EmailsDB.keys() || [];
-            var i = 0;
             for await (const key of keys) {
                 let parsed = key.match(/(?:saved_)([0-9]+)/) as any;
                 if (parsed && parsed.length == 2) {
@@ -64,13 +63,9 @@ export default function PackagePage(props: any) {
                         setlist(s => s.concat([{ time: parsed[1], mykey: key, date, name: object?.name || "Untitled", object: objects, ...{ invalid, safe, risky } }]).map(e => e).sort((a, b) => Number(b.time) - Number(a.time)))
                     }
                 }
-                if (i >= keys.length - 1) {
-                    setShow(true)
-                }
-                i++
                 // await sleep(100)
             }
-
+            setShow(false)
         })
         return () => {
             setlist([])
@@ -82,6 +77,17 @@ export default function PackagePage(props: any) {
                 <Global.Blocks style={{
                     margin: "3em 7em -2em auto"
                 }} />
+            }
+            {
+                show && <RingLoader
+                style={{
+                    position: "absolute",
+                    bottom: 45,
+                    right: 45
+                }}
+                color="#f3f3f3"
+                size={30}
+                 />
             }
         </Global.Cbody>
     )
