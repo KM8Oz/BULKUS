@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-# ./.cargo.sh
+./.cargo.sh
 .env
 # Editor directories and files
 .vscode/*
