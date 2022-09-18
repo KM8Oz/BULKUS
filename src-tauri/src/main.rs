@@ -104,7 +104,11 @@ async fn export_xlsx(
         date: my_json.date,
         array,
     };
-    exel::export_to_xlsx(this_data, my_json.file_path);
+    let resources_path = window.app_handle().path_resolver()
+    .resolve_resource("templates/template.xlsx")
+    .expect("failed to resolve resource dir");
+    println!("resources_path : {:?}", resources_path);
+    exel::export_to_xlsx(this_data, my_json.file_path, resources_path);
     Ok(())
 }
 

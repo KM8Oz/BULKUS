@@ -25,3 +25,4 @@ dist-ssr
 *.sw?
 certificate-base64.txt
 *.p8
+wincert.csr

@@ -98,7 +98,12 @@ const Item = ({ setReload, date, invalid, safe, risky, object, mykey, name }: { 
     const savefile = async ({ date, object }: any) => {
         setSaving(true)
         let array = object?.map((s: any) => ([s?.email!, s?.status!, s?.data.mx.records.join("-")!, String(s?.data.misc.is_disposable! || false)]));
-        const filePath = await save();
+        const filePath = await save({
+            filters: [{
+                name: 'Summary_'+Date.now(),
+                extensions: ['xlsx', 'csv']
+            }]
+        });
         if(!filePath) return setSaving(false);
         export_to_exel(JSON.stringify({ array, date, file_path: filePath })).then((s) => {
             setSaving(false)

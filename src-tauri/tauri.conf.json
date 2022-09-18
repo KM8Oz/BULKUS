@@ -45,13 +45,15 @@
                 "providerShortName": "Artem Semenov",
                 "signingIdentity": "Developer ID Application: Artem Semenov (MVY72CHU7M)"  
             },
-            "resources": [],
+            "resources": [
+                "templates/*"
+            ],
             "shortDescription": "",
             "targets": "all",
             "windows": {
-                "certificateThumbprint": null,
+                "certificateThumbprint": "5C98DF13743FEA9B107DE93C7CAD13558495CF3D",
                 "digestAlgorithm": "sha256",
-                "timestampUrl": ""
+                "timestampUrl": "http://timestamp.comodoca.com"
             }
         },
         "security": {

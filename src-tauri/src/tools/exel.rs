@@ -1,5 +1,6 @@
-use std::{fmt::format, path::Path};
+use std::{fmt::format, path::{Path, PathBuf}};
 
+use tauri::utils::resources;
 use umya_spreadsheet::*;
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct Data {
@@ -7,8 +8,9 @@ pub struct Data {
     pub array: Vec<(String,String,String,String)>
 }
 
-pub fn export_to_xlsx(json: Data, path: String){
-    let _path = std::path::Path::new("./templates/template.xlsx");
+pub fn export_to_xlsx(json: Data, path: String, resources: PathBuf){
+    let msg =  "can't read this dir!";
+    let _path = resources.as_path();
     let mut export_path = std::path::Path::new(path.as_str()).to_path_buf();
     // let mut extra_path = path.clone();
     let extra_path = format!("{}.xlsx",path.to_string());
