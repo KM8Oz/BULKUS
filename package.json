@@ -7,7 +7,7 @@
         "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
-        "tauri": "tauri",
+        "tauri": "source ./.cargo.sh && tauri",
         "notarization": "source ./.cargo.sh && yarn start_notr_dmg && yarn staple",
         "postinstall": "patch-package",
         "notr-history": "source ./.cargo.sh && xcrun altool --notarization-history 0 --asc-provider \"$APPLE_PROVIDER_SHORT_NAME\" -u \"$APPLE_ID\" -p \"$APPLE_PASSWORD\"",
