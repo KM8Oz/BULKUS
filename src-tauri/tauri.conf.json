@@ -51,9 +51,9 @@
             "shortDescription": "",
             "targets": "all",
             "windows": {
-                "certificateThumbprint": "5C98DF13743FEA9B107DE93C7CAD13558495CF3D",
+                "certificateThumbprint": null,
                 "digestAlgorithm": "sha256",
-                "timestampUrl": "http://timestamp.comodoca.com"
+                "timestampUrl": null
             }
         },
         "security": {
