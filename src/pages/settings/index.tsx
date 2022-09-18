@@ -1,16 +1,19 @@
 import React, { FC, useContext, useEffect, useMemo, useState } from "react";
 // import Database from "tauri-plugin-sql-api";
-import { checkemails, notify } from "../../tools";
+import { checkemails, check_proxy, notify } from "../../tools";
 import styled from "styled-components";
 import { MenuContext } from "../../hooks";
 import Global from "../../styledcomponent";
 import { pathsettingsmy, pathsemailssmy } from "../../tools/catch";
 import { Store } from "tauri-plugin-store-api";
+import { RingLoader } from "react-spinners";
 const SettingsDB = new Store(pathsettingsmy.value);
 const EmailsDB = new Store(pathsemailssmy.value);
 export default ({ ...props }) => {
     const [loaded, setLoaded] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
+    const [settings_status, setSettingsStatus] = useState({ email: true, proxy: true })
+    // const [isSaving, setIsSaving] = useState(false);
+    const [isValidating, setValidating] = useState(false);
     const [settings, setSettings] = useState({
         sender: null,
         proxyurl: null,
@@ -36,11 +39,35 @@ export default ({ ...props }) => {
             status.email = false
         }
         if (settings.proxyactive) {
-            let proxy_match = String(settings.proxyurl || "")?.match(/(?:socks5:\/\/)(.+?(?=:))(?::)(.+?(?=@))(?:@)(.+?(?=:))(?::)([0-9]{3,5})/);
+            let proxy_match = String(settings.proxyurl || "")?.match(/(socks5:\/\/)(.+?(?=:)):+(.+?(?=@))@+([0-9a-zA-Z.-]{0,64}?(?=:):)+([0-9]{2,5})/);
+            console.log(proxy_match);
             if (!proxy_match || proxy_match.length != 5) {
                 status.proxy = false
+            } else {
+                let username = proxy_match[1] == "empty" ? undefined : proxy_match[1];
+                let password = proxy_match[2] == "empty" ? undefined : proxy_match[2];
+                let host = proxy_match[3] || "localhost";
+                let port = Number(proxy_match[4] || "") || 80;
+                let is_valid = await check_proxy({
+                    host,
+                    port,
+                    username,
+                    password
+                }).then((res) => {
+                    console.log("proxy checked!", res);
+                    return res;
+                }).catch((err) => {
+                    console.log("proxy checked!", { err });
+                    return null;
+                })
+                if (!is_valid) {
+                    status.proxy = false
+                }
             }
+        } else {
+            setSettings(s => ({ ...s, proxyurl: null }))
         }
+        setSettingsStatus(status)
         return status;
     }
     useEffect(() => {
@@ -56,15 +83,16 @@ export default ({ ...props }) => {
         return () => setLoaded(false);
     }, [])
     const save = async () => {
+        setValidating(true)
         let status = await validation();
-        if(status.email && status.proxy){
-            setIsSaving(true)
+        if (status.email && status.proxy) {
             await SettingsDB.set("settings", settings)
             await SettingsDB.save()
-            setIsSaving(false)
             await notify("settings", `Saved`)
+            setValidating(false)
         } else {
-            await notify("settings", `could not save before checking your: ${!status.email ? "email": "proxy_url"}`)
+            await notify("settings", `could not save before fixing your: ${!status.proxy ? "⚠️ proxy_url" :"" + !status.email ? "⚠️email" :""  }`)
+            setValidating(false)
         }
     }
     const getsettings = async () => {
@@ -83,11 +111,15 @@ export default ({ ...props }) => {
                 }}>
                     Sender:
                 </span>
-                <Input type={"text"} value={String(settings.sender || "")} placeholder="Sender: example@domain.com" onChange={(m) => {
-                    m.preventDefault()
-                    let el = m.nativeEvent.target as any;
-                    setSettings(s => ({ ...s, sender: el?.value }))
-                }} />
+                <Input type={"text"}
+                    style={{
+                        border: `1px solid ${settings_status.proxy ? "#35d435" : "#d43535"}`
+                    }}
+                    value={String(settings.sender || "")} placeholder="Sender: example@domain.com" onChange={(m) => {
+                        m.preventDefault()
+                        let el = m.nativeEvent.target as any;
+                        setSettings(s => ({ ...s, sender: el?.value }))
+                    }} />
             </Argument>
             <Argument>
                 <span style={{
@@ -109,7 +141,7 @@ export default ({ ...props }) => {
                 }}>
                     smtp timeout: <kbd>{settings.smtptimout}</kbd>
                 </span>
-                <Input type={"range"} min="100" max="1000" name="smtptimeout" onChange={(m) => {
+                <Input type={"range"} min="100" max="10000" name="smtptimeout" onChange={(m) => {
                     m.preventDefault()
                     let el = m.nativeEvent.target as any;
                     setSettings(s => ({ ...s, smtptimout: el?.valueAsNumber }))
@@ -130,9 +162,18 @@ export default ({ ...props }) => {
                         }}
                             formNoValidate={true}
                             value={String(settings.proxyurl || "")}
-                            placeholder="url:socks5://username:pass@host:port " />
+                            style={{
+                                border: `1px solid ${settings_status.proxy ? "#35d435" : "#d43535"}`
+                            }}
+                            placeholder="socks5://empty:empty@host:port" />
                     }
                     <Checkbox checked={settings.proxyactive} type={"checkbox"} onChange={(m) => {
+                        let checked = (m.nativeEvent.target as any)?.checked;
+                        if(!checked){
+                            setSettings(s=>({...s, proxyurl:null}));
+                        } else {
+                            setSettings(s=>({...s, proxyurl:"socks5://empty:empty@host:port" as any}));
+                        }
                         setSettings(s => ({ ...s, proxyactive: (m.nativeEvent.target as any)?.checked }))
                     }} />
                 </GroupInputs>
@@ -146,10 +187,10 @@ export default ({ ...props }) => {
                 <GroupInputs>
                     <Input type={"text"} onChange={(m) => {
                         let el = m.nativeEvent.target as any;
-                        setSettings(s => ({ ...s, proxyurl: el.value }))
+                        setSettings(s => ({ ...s, key: el.value }))
                     }}
                         formNoValidate={true}
-                        value={String(settings.proxyurl || "")}
+                        value={String(settings.key || "")}
                         placeholder="xxxxxxxxxxxxxxxxxxxxxxxxx" />
                 </GroupInputs>
             </Argument>
@@ -159,7 +200,10 @@ export default ({ ...props }) => {
                 style={{
                     alignSelf: "flex-end",
                     marginTop: 40
-                }} width={250} loading={0} fontsize={20} >{"Save"}</Global.Cbutton>
+                }} width={250} loading={0} fontsize={20} >{isValidating ? <RingLoader
+                    color="#36d7b7"
+                    size={20}
+                /> : "Save"}</Global.Cbutton>
         </Wrapper>
     )
 }

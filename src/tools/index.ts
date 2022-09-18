@@ -51,6 +51,18 @@ export const stop_for_loop = (v:boolean) => {
 export const export_to_exel = (data:string): Promise<any> => {
     return invoke('export_xlsx', {data}) as any;
 }
+export interface Proxy {
+    host: string,
+    /// Use the specified SOCKS5 proxy port to perform email verification.
+    port: number,
+    /// Username to pass to proxy authentication.
+    username?: string,
+    /// Password to pass to proxy authentication.
+    password?: string,
+}
+export const check_proxy = (proxy:Proxy): Promise<any> => {
+    return invoke('check_proxy', {proxy}) as any;
+}
 export const fastcheckemails = (emails: string[]): Promise<Array<{ email: string, status: boolean }>> => invoke('fastcheckemails', {
     emails
 }) as any;

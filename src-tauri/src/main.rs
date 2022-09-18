@@ -13,6 +13,7 @@ use std::{
 
 use std::sync::mpsc;
 use std::sync::mpsc::{Sender, Receiver};
+use check_if_email_exists::CheckEmailInputProxy;
 // use koit_toml::{FileDatabase, format::Toml};
 use futures::{executor::block_on, future::ok};
 use serde_json::{de, json};
@@ -62,6 +63,13 @@ async fn loop_state(
     state: tauri::State<'_, AppState>) -> Result<(), String> {
   *window.state::<AppState>().loop_state.lock().unwrap() = data.loop_state;
   Ok(())
+}
+
+
+// remember to call `.manage(MyState::default())`
+#[tauri::command]
+async fn check_proxy(window: tauri::Window,proxy: CheckEmailInputProxy, state: tauri::State<'_, AppState>) -> Result<String, String> {
+    proxy.check().await
 }
 
 #[tauri::command]
@@ -121,7 +129,8 @@ fn main() {
             checkemails,
             set_smtp_config,
             export_xlsx,
-            loop_state
+            loop_state,
+            check_proxy
         ])
         .setup(|app| {
             if let Some(user_dirs) = UserDirs::new() {

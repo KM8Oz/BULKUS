@@ -4,7 +4,7 @@ import { ContentEditableEvent } from "react-contenteditable";
 import PastIcon from "../../icons/PastIcon";
 import Global from "../../styledcomponent";
 import { readText } from '@tauri-apps/api/clipboard';
-import { checkemails, fastcheckemails, sleep, stop_for_loop } from "../../tools";
+import { checkemails, fastcheckemails, notify, sleep, stop_for_loop } from "../../tools";
 import { useFetching } from "../../hooks/fetcher";
 import styled, { StyledComponent } from "styled-components";
 import { random } from 'lodash';
@@ -95,6 +95,7 @@ const CollectionName = styled.input`
   background-color: #f1f1f1;
   border-radius: 20px;
   padding: 0px 1.5em;
+  color: #000;
   margin-top: 2em;
 `;
 
@@ -107,6 +108,7 @@ export default function AddPage(props: any) {
     const [validlistemails, setValidListEmails] = useState<any[]>([]);
     const [validlist, setValidList] = useState<any[]>([]);
     const [progress, SetProgress] = useState(0);
+    const [perscentage, setPercentage] =  useState(0);
     const [confirm, SetConfirme] = useState(false);
     const [COLLECTION_NAME, setCOLLECTION_NAME] = useState("");
     const [done, SetDone] = useState(false);
@@ -225,14 +227,25 @@ export default function AddPage(props: any) {
         // setSaving(false)
     }
     let _navigator = useNavigate();
-    const confirme = async ()=>{
-        if(COLLECTION_NAME && validlistemails.length > 0){
-            await EmailsDB.set("saved_"+Date.now(), { list: validlistemails, name: COLLECTION_NAME });
-            await EmailsDB.save();
-            alert("Saved");
-            _navigator("/Package")
+    const confirme = async (name?:string)=>{
+        if(name || COLLECTION_NAME){
+            if (validlistemails.length > 0){
+                await EmailsDB.set("saved_"+Date.now(), { list: validlistemails, name: name ? name : COLLECTION_NAME });
+                await EmailsDB.save();
+                await notify("Collection","Saved");
+                _navigator("/Package")
+            } else {
+                var list = await EmailsDB.get("valid_emails") as any[] || [];
+                if(list.length == 0){
+                    await notify("Collection","Collection no collection to save!");
+                }
+                await EmailsDB.set("saved_"+Date.now(), { list: list, name: name ? name : COLLECTION_NAME });
+                await EmailsDB.save();
+                await notify("Collection","Saved");
+                _navigator("/Package")
+            }
         } else {
-            alert("Collection name required!");
+            await notify("Collection","Collection name required!");
         }
         // setSaving(false)
     }
@@ -245,6 +258,7 @@ export default function AddPage(props: any) {
                 let allhtml = await EmailsDB.get("last_checked_emails_html") as any;
                 if(allhtml && !listemails){
                     setListEmails(allhtml)
+                    setSaving(true)
                 }
             })
             getsettings().then(()=>{
@@ -257,6 +271,11 @@ export default function AddPage(props: any) {
                 var list = await EmailsDB.get("valid_emails") as any[] || [];
                 let reachable = event.payload;
                 setValidListEmails(s=>s?.concat(reachable).map(s=>s));
+                setPercentage(s=>{
+                    let all = r.split(" ").length;
+                    let valid = list.length;
+                    return (valid/all)*100
+                })
                 list=list.concat(reachable).map((s: any)=>s);
                 if(list) await EmailsDB.set("valid_emails", list);
                 for await (const element of reachable) {
@@ -314,7 +333,7 @@ export default function AddPage(props: any) {
                 }} 
                 width={250} 
                 fontsize={20} 
-            >{"Stop"}</Global.SaveBtn>}
+            >Stop {perscentage > 0 ? perscentage+"%" : ""}</Global.SaveBtn>}
             {is_saving && <Global.SaveBtn
                 loading={isloading ? 1 : 0}
                 onClick={save}
@@ -337,6 +356,13 @@ export default function AddPage(props: any) {
                         x
                     </CloseBtn>
                     <CollectionName
+                        onKeyUp={(ev)=>{
+                            if (ev.key == "Enter"){
+                                sleep(500).then(()=>{
+                                    confirme(COLLECTION_NAME)
+                                })
+                            }
+                        }}
                         value={COLLECTION_NAME} type="text" 
                         placeholder="COLLECTION NAME" onChange={(v)=>{
                         v.preventDefault()
