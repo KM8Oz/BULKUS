@@ -5,12 +5,18 @@ import { useSprings, animated, config } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
 import { clamp } from 'lodash'
 // import swap from 'lodash-move'
-import { EmailsDB, export_to_exel, notify, sleep } from "../../tools";
+import { export_to_exel, notify, sleep } from "../../tools";
 import { useSpring } from "react-spring";
 import { PieChart } from 'react-minimal-pie-chart';
 import ReactJson from 'react-json-view'
-import { save } from '@tauri-apps/api/dialog';
+import { confirm, save } from '@tauri-apps/api/dialog';
 import { downloadDir, publicDir } from "@tauri-apps/api/path";
+import { pathsemailssmy, pathsettingsmy } from "../../tools/catch";
+import { Store } from "tauri-plugin-store-api";
+import Close from "../../icons/Close";
+import { GridLoader, RingLoader } from "react-spinners";
+const SettingsDB = new Store(pathsettingsmy.value);
+const EmailsDB = new Store(pathsemailssmy.value);
 const to_object = (json: any) => {
     try {
         return JSON.parse(json)
@@ -21,18 +27,22 @@ const to_object = (json: any) => {
 export default function PackagePage(props: any) {
     const [list, setlist] = useState<any[]>([]);
     const [show, setShow] = useState(false);
+    const [reload, setReload] = useState(false);
     useEffect(() => {
         EmailsDB.load().then(async () => {
-            let keys = await EmailsDB.keys();
+            let keys = await EmailsDB.keys() || [];
             var i = 0;
             for await (const key of keys) {
                 let parsed = key.match(/(?:saved_)([0-9]+)/) as any;
                 if (parsed && parsed.length == 2) {
-                    // console.log(parsed[1]);
-                    let object = await EmailsDB.get(key) as any[];
-                    let list = object.map(s => {
+                    let object = await EmailsDB.get(key) as any;
+                    // console.log(parsed[1], object);
+                    if (!object?.list || !(object?.list.length > 0)) {
+                        continue;
+                    }
+                    let list = object?.list?.map((s: any) => {
                         try {
-                            let ob = JSON.parse(s.data)
+                            let ob = JSON.parse(s?.data)
                             if (ob) {
                                 return ob
                             } else {
@@ -42,16 +52,16 @@ export default function PackagePage(props: any) {
                         } catch (error) {
                             return null
                         }
-                    });
-                    let objects = object.map(s => ({ ...s, data: to_object(s.data) }));
+                    }) as any[];
+                    let objects = object?.list?.map((s: { data: any; }) => ({ ...s, data: to_object(s.data) }));
                     // console.log(objects); //is_reachable
-                    let invalid = list.reduce((n, e) => e.is_reachable === 'invalid' ? n + 1 : n, 0);
-                    let safe = list.reduce((n, e) => e.is_reachable === 'safe' ? n + 1 : n, 0);
-                    let risky = list.reduce((n, e) => e.is_reachable === 'risky' ? n + 1 : n, 0);
+                    let invalid = list.reduce((n: any, e: any) => e.is_reachable === 'invalid' || e.is_reachable === 'unknown' ? n + 1 : n, 0);
+                    let safe = list.reduce((n: any, e: any) => e.is_reachable === 'safe' ? n + 1 : n, 0);
+                    let risky = list.reduce((n: any, e: any) => e.is_reachable === 'risky' ? n + 1 : n, 0);
                     let date = new Date(Number(parsed[1])).toLocaleString()
                     if (object) {
                         // const falseNb = object.data.reduce((n, e) => e.status === 'false' ? n+1 : n, 0);
-                        setlist(s => s.concat([{ date, object: objects, ...{ invalid, safe, risky } }]).map(e => e))
+                        setlist(s => s.concat([{ time: parsed[1], mykey: key, date, name: object?.name || "Untitled", object: objects, ...{ invalid, safe, risky } }]).map(e => e).sort((a, b) => Number(b.time) - Number(a.time)))
                     }
                 }
                 if (i >= keys.length - 1) {
@@ -65,10 +75,10 @@ export default function PackagePage(props: any) {
         return () => {
             setlist([])
         }
-    }, [])
+    }, [reload])
     return (
         <Global.Cbody>
-            {show ? <DraggableList items={list.map(s => (<Item {...s} />))} /> :
+            {(list.length > 0) ? <DraggableList items={list.map(s => (<Item setReload={setReload} {...s} />))} /> :
                 <Global.Blocks style={{
                     margin: "3em 7em -2em auto"
                 }} />
@@ -76,30 +86,28 @@ export default function PackagePage(props: any) {
         </Global.Cbody>
     )
 }
-const Item = ({ date, invalid, safe, risky, object }: { date: string, invalid: number, safe: number, risky: number, object: any }) => {
+const Item = ({ setReload, date, invalid, safe, risky, object, mykey, name }: { setReload: any, date: string, mykey?: any, name?: string, invalid: number, safe: number, risky: number, object: any }) => {
+
     const [droped, setDroped] = useState(false);
+    const [saving, setSaving] = useState(false);
     const animatedStyled = useSpring({
         height: droped ? 470 : 0,
         marginTop: droped ? 12 : 0,
         // config: { frequency: 1, velocity: 1 }
     })
     const savefile = async ({ date, object }: any) => {
-        let array = object?.map((s:any)=>([s?.email!, s?.status!,s?.data.mx.records.join("-")! ,String(s?.data.misc.is_disposable!||false)]));
-        let dd = await downloadDir();
-        const filePath = await save({
-            defaultPath:dd,
-            title: "Save summery |"+date,
-            filters: [{
-              name: '*',
-              extensions: ['xlsx', 'csv']
-            }]
-          }); 
-         export_to_exel(JSON.stringify({array, date, file_path:filePath})).then((s)=>{
+        setSaving(true)
+        let array = object?.map((s: any) => ([s?.email!, s?.status!, s?.data.mx.records.join("-")!, String(s?.data.misc.is_disposable! || false)]));
+        const filePath = await save();
+        if(!filePath) return setSaving(false);
+        export_to_exel(JSON.stringify({ array, date, file_path: filePath })).then((s) => {
+            setSaving(false)
             notify("Saved", "Success")
-         })
-         .catch((eer)=>{
-            notify("Saving", "Error accured: \n"+eer)
-         })
+        })
+            .catch((eer) => {
+                setSaving(false)
+                notify("Saving", "Error accured: \n" + eer)
+            })
     }
     return (
         <animated.div style={{
@@ -143,15 +151,36 @@ const Item = ({ date, invalid, safe, risky, object }: { date: string, invalid: n
                     color: "#000"
                 }}>
                     {
+                        name
+                    }
+                    <br />
+                    {
                         date
                     }
                 </span>
                 <>
-                    <SaveIcn width={30} style={{
+                    {saving ? <RingLoader
+                            color="#36d7b7"
+                            size={30}
+                             /> : <SaveIcn width={30} style={{
+                            cursor: "pointer"
+                        }}
+                            onClick={() => savefile({ object, date })}
+                    />}
+                    <Close width={30} style={{
                         cursor: "pointer"
-                    }}
-                        onClick={() => savefile({ object, date })}
-                    />
+                    }} onClick={async () => {
+                        if (!mykey) return;
+                        const confirmed = await confirm("Are you sure?", {
+                            type: "warning",
+                            title: "Delete"
+                        })
+                        if (confirmed) {
+                            await EmailsDB.delete(mykey) as any;
+                            await EmailsDB.save();
+                            setReload((s: any) => !s)
+                        }
+                    }} />
                     <Arrow onClick={() => setDroped(S => !S)}
                         style={{
                             cursor: "pointer",
@@ -217,7 +246,7 @@ function DraggableList({ items }: { items: any[] }) {
     return (
         <Global.DraggableContent >
             {/* {springs.map(({ zIndex, shadow, y, scale }, i) => ( */}
-            {items.map((item:any,i:number)=>
+            {items.map((item: any, i: number) =>
                 <animated.div
                     // {...bind(i)}
                     key={i}

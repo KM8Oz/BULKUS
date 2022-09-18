@@ -1,6 +1,6 @@
 [package]
 name = "app"
-version = "0.1.0"
+version = "0.1.1"
 description = "Bulk Email Compain"
 authors = ["km8oz"]
 license = "MIT OR Apache-2.0"
@@ -21,6 +21,7 @@ directories = "4.0.1"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.0.5", features = ["api-all", "macos-private-api"] }
 # window-shadows = "0.2.0"
+# threadpool = "1.8.1"
 umya-spreadsheet = "0.8.1"
 rand = "0.8.5"
 tokio = { version = "1.18.2", features = ["full"] }
@@ -31,6 +32,7 @@ check-if-email-exists = { path = "./check-if-email-exists" }
 # fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
 
 # async-smtp = "0.5.0"
+# koit-toml = "0.2.1"
 tauri-plugin-store =  { git = "https://github.com/tauri-apps/tauri-plugin-store" }
 # tauri-plugin-stronghold =  { git = "https://github.com/tauri-apps/tauri-plugin-stronghold" }
 # emailx = "0.1"

@@ -33,3 +33,14 @@ export const pathsemailssmy = {
    },
    back: cachdirmy.value+"_emails.dat"
 } 
+export const unlistner = {
+    
+    get value() : ()=>any {
+       return this.back
+   },
+   
+    set value(v : ()=>any) {
+       this.back = v;
+   },
+   back: ()=>null
+} 

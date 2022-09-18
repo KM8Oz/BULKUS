@@ -1,19 +1,3 @@
-// check-if-email-exists
-// Copyright (C) 2018-2022 Reacher
-
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as published
-// by the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Affero General Public License for more details.
-
-// You should have received a copy of the GNU Affero General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 mod connect;
 mod error;
 #[cfg(feature = "headless")]
@@ -28,7 +12,7 @@ use serde::{Deserialize, Serialize};
 use trust_dns_proto::rr::Name;
 
 use crate::util::input_output::CheckEmailInput;
-use connect::check_smtp_with_retry;
+use connect::{ check_smtp_without_retry};
 pub use error::*;
 
 /// Details that we gathered from connecting to this email via SMTP
@@ -71,7 +55,7 @@ pub async fn check_smtp(
 		}
 	}
 
-	check_smtp_with_retry(to_email, host, port, domain, input, input.retries).await
+	check_smtp_without_retry(to_email, host, port, domain, input).await
 }
 
 #[cfg(test)]

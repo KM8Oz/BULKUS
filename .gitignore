@@ -11,7 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
-
+./.cargo.sh
+.env
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +23,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+certificate-base64.txt
+*.p8

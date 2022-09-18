@@ -1,19 +1,4 @@
-// check-if-email-exists
-// Copyright (C) 2018-2022 Reacher
-
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as published
-// by the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Affero General Public License for more details.
-
-// You should have received a copy of the GNU Affero General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+#![allow(dead_code)]
 use async_native_tls::TlsConnector;
 use async_recursion::async_recursion;
 use async_smtp::{
@@ -71,7 +56,7 @@ async fn connect_to_host(
 		security,
 	)
 	.hello_name(ClientId::Domain(input.hello_name.clone()))
-	.timeout(Some(Duration::new(30, 0))); // Set timeout to 30s
+	.timeout(Some(Duration::new(10, 0))); // Set timeout to 30s
 
 	if let Some(proxy) = &input.proxy {
 		let socks5_config = match (&proxy.username, &proxy.password) {
@@ -284,7 +269,7 @@ async fn create_smtp_future(
 
 /// Get all email details we can from one single `EmailAddress`, without
 /// retries.
-async fn check_smtp_without_retry(
+pub async fn check_smtp_without_retry(
 	to_email: &EmailAddress,
 	host: &Name,
 	port: u16,

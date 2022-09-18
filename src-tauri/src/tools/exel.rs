@@ -1,4 +1,4 @@
-use std::fmt::format;
+use std::{fmt::format, path::Path};
 
 use umya_spreadsheet::*;
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
@@ -9,7 +9,7 @@ pub struct Data {
 
 pub fn export_to_xlsx(json: Data, path: String){
     let _path = std::path::Path::new("./templates/template.xlsx");
-    let export_path = std::path::Path::new(path.as_str());
+    let mut export_path = std::path::Path::new(path.as_str()).to_path_buf();
     // let mut extra_path = path.clone();
     let extra_path = format!("{}.xlsx",path.to_string());
     let export_path_all = std::path::Path::new(&extra_path);
@@ -38,8 +38,16 @@ pub fn export_to_xlsx(json: Data, path: String){
         sheet.get_cell_mut(format!("K{}", i).as_str()).set_value(k).get_style_mut().set_font(font.clone());
         i += 1;
     }
-    match export_path.extension().unwrap().to_str().unwrap() {
+    let extension_parsed =  match export_path.extension() {
+        Some(m)=> m.to_str(),
+        None => {
+            let _ = export_path.set_extension("xlsx");
+            Some("xlsx")
+        },
+    }; 
+    match extension_parsed.unwrap() {
         "xlsx" => {
+            println!("{:?}", export_path);
             let _ = umya_spreadsheet::writer::xlsx::write(&template_book, export_path);
         },
         "csv" => {

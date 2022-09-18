@@ -8,6 +8,9 @@ import macos_icon from '../assets/notification-icon.icns?raw';
 // import macos_icon from '../assets/notification-icon.jpg?raw';
 import win_icon from '../assets/notification-icon.ico?raw';
 import linux_icon from '../assets/notification-icon.png?raw';
+import { appDir, BaseDirectory } from '@tauri-apps/api/path';
+import { fs, path } from '@tauri-apps/api';
+import { pathsemailssmy, pathsettingsmy } from './catch';
 // import { appDir, BaseDirectory, cacheDir, join } from '@tauri-apps/api/path';
 // import { fs, path } from '@tauri-apps/api';
 // import { cachdirmy, pathsemailssmy, pathsettingsmy } from './catch';
@@ -38,6 +41,13 @@ export const checkemails = ({emails, sender, proxyurl, smtptimout}:{emails: stri
         data
     }) as any;
 }
+export const stop_for_loop = (v:boolean) => {
+    return invoke('loop_state', {
+        data: {
+            loop_state:v
+        }
+    }) as any;
+}
 export const export_to_exel = (data:string): Promise<any> => {
     return invoke('export_xlsx', {data}) as any;
 }
@@ -63,19 +73,18 @@ export class ThisPlatform<T> {
     }
 }
 
-// appDir().then(async (_cacheDirPath)=>{
-//     cachdirmy.value = _cacheDirPath;
-//     await sleep(400)
-//     let entries = await fs.readDir(cachdirmy.value, { dir:BaseDirectory.App, recursive:false });
-//     let pathsettings = await path.join(cachdirmy.value, "_settings.dat");
-//     let pathsemails = await path.join(cachdirmy.value, "_emails.dat");
-//     pathsettingsmy.value = pathsettings;
-//     pathsemailssmy.value = pathsemails;
-//     let pathsettingsexist = entries.map(s=>s.path).includes(pathsettings);
-//     let pathsemailsexist = entries.map(s=>s.path).includes(pathsemails);
-//     if(!pathsettingsexist) await fs.writeFile(pathsettings, "");
-//     if(!pathsemailsexist) await fs.writeFile(pathsemails, "");
-// })
+export const loadall =  async ()=>{
+    let _cacheDirPath = await path.cacheDir();
+    let pathsettings = await path.join(_cacheDirPath, "_settings.dat");
+    let pathsemails = await path.join(_cacheDirPath, "_emails.dat");
+    pathsettingsmy.value = pathsettings;
+    pathsemailssmy.value = pathsemails;
+    let entries = await fs.readDir(_cacheDirPath, { dir:BaseDirectory.Cache, recursive:false });
+    let pathsettingsexist = entries.map((s: { path: any; })=>s.path).includes(pathsettings);
+    let pathsemailsexist = entries.map((s: { path: any; })=>s.path).includes(pathsemails);
+    if(!pathsettingsexist) await fs.writeFile(pathsettings, "{}");
+    if(!pathsemailsexist) await fs.writeFile(pathsemails, "{}");
+};
 
 // let path = await join(cacheDirPath);
 
@@ -84,10 +93,7 @@ export const match_email =  (email:string)=>{
     if(email.match(match)) return { status: true, value: Array.from(email.match(match) || [])[0] }
     return { status: false, value: null }
 }
-export const SettingsDB = new Store("_settings.dat");
-// export const SettingsDB = new Store(pathsettingsmy.value);
-// export const EmailsDB = new Store(pathsettingsmy.value);
-export const EmailsDB = new Store("_emails.dat");
+
 export function sleep(arg0: number) {
     return new Promise((resolve, reject)=>{
         setTimeout(resolve,arg0)

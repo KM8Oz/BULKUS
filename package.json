@@ -1,14 +1,26 @@
 {
     "name": "bulk-email-compain",
     "private": true,
-    "version": "0.0.0",
+    "version": "0.1.1",
     "type": "module",
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
-        "tauri": "./.cargo.sh && tauri",
-        "postinstall": "patch-package"
+        "tauri": "source ./.cargo.sh && tauri",
+        "notarization": "source ./.cargo.sh && yarn start_notr_dmg && yarn staple",
+        "postinstall": "patch-package",
+        "notr-history": "source ./.cargo.sh && xcrun altool --notarization-history 0 --asc-provider \"$APPLE_PROVIDER_SHORT_NAME\" -u \"$APPLE_ID\" -p \"$APPLE_PASSWORD\"",
+        "staple": "xcrun stapler staple ./src-tauri/target/release/bundle/dmg/BULKUS_*.dmg",
+        "check_notr_dmg": "spctl -a -t open --context context:primary-signature -v ./src-tauri/target/release/bundle/dmg/BULKUS_*.dmg",
+        "check_notr_app": "spctl -a -v ./src-tauri/target/release/bundle/macos/BULKUS.app",
+        "start_notr_dmg": "xcrun altool --notarize-app  --asc-provider \"$APPLE_PROVIDER_SHORT_NAME\" --primary-bundle-id \"$APPLE_PACKAGE_IDENTITY\" -u \"$APPLE_ID\" -p \"$APPLE_PASSWORD\" -t osx -f ./src-tauri/target/release/bundle/dmg/BULKUS_*.dmg",
+        "start_notr_dmg_manual": "source ./.cargo.sh && xcrun altool --notarize-app  --asc-provider \"$APPLE_PROVIDER_SHORT_NAME\" --primary-bundle-id \"$APPLE_PACKAGE_IDENTITY\" -u \"$APPLE_ID\" -p \"$APPLE_PASSWORD\" -t osx -f ./src-tauri/target/release/bundle/dmg/BULKUS_*.dmg",
+        "create_pkg": "source ./.cargo.sh && sudo pkgbuild --component ./src-tauri/target/release/bundle/macos/BULKUS.app      --install-location /Applications   --sign \"$APPLE_SIGNING_INSTALLER\"    ./src-tauri/target/release/bundle/dmg/BULKUS.pkg",
+        "sign_pkg": "source ./.cargo.sh && sudo productbuild --package ./src-tauri/target/release/bundle/dmg/BULKUS.pkg    --content ./src-tauri/target/release/bundle/macos/BULKUS.app    --sign \"$APPLE_SIGNING_INSTALLER\"   ./src-tauri/target/release/bundle/dmg/BULKUS_signed.pkg",
+        "notarise_pkg": "source ./.cargo.sh && xcrun altool --notarize-app --primary-bundle-id \"$APPLE_PACKAGE_IDENTITY\" --asc-provider \"$APPLE_PROVIDER_SHORT_NAME\" --username \"$APPLE_ID\" --password \"$APPLE_PASSWORD\" --file ./src-tauri/target/release/bundle/dmg/BULKUS_signed.pkg",
+        "check_pkg": "spctl -v --assess --type install ./src-tauri/target/release/bundle/dmg/BULKUS_signed.pkg",
+        "staple_pkg": "xcrun stapler staple ./src-tauri/target/release/bundle/dmg/BULKUS_signed.pkg"
     },
     "dependencies": {
         "@tauri-apps/api": "^1.0.2",
@@ -24,6 +36,7 @@
         "react-minimal-pie-chart": "^8.3.0",
         "react-router": "^6.3.0",
         "react-router-dom": "^6.3.0",
+        "react-spinners": "^0.13.4",
         "react-spring": "^9.5.2",
         "react-with-gesture": "^4.0.8",
         "styled-components": "^5.3.5",

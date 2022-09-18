@@ -8,7 +8,7 @@
     },
     "package": {
         "productName": "BULKUS",
-        "version": "0.1.0"
+        "version": "0.1.1"
     },
     "tauri": {
         "allowlist": {
@@ -31,9 +31,10 @@
                 "icons/128x128.png",
                 "icons/128x128@2x.png",
                 "icons/icon.icns",
-                "icons/icon.ico"
+                "icons/icon.ico",
+                "icons/icon.png"
             ],
-            "identifier": "dev.kmoz.bulkus",
+            "identifier": "dev.kmoz.bulkus-alpha",
             "longDescription": "",
             "macOS": {
                 "license": "./LICENCE",
@@ -42,7 +43,7 @@
                 "minimumSystemVersion": "10.7",
                 "frameworks": [],
                 "providerShortName": "Artem Semenov",
-                "signingIdentity": "DD0B51BEE9D02E2A5DA4D84ACADAB8CF3D11C9F6"  
+                "signingIdentity": "Developer ID Application: Artem Semenov (MVY72CHU7M)"  
             },
             "resources": [],
             "shortDescription": "",

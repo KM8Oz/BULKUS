@@ -1,4 +1,4 @@
-#![allow(missing_docs, unused_must_use)]
+#![allow(missing_docs, unused_must_use, dead_code)]
 #![cfg_attr(
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
@@ -8,21 +8,24 @@
 use std::{
     fs::{self, DirEntry, ReadDir},
     path::Path,
-    str::FromStr, thread,
+    str::FromStr, thread, sync::{Arc, atomic::AtomicBool, Mutex},
 };
 
 use std::sync::mpsc;
 use std::sync::mpsc::{Sender, Receiver};
+// use koit_toml::{FileDatabase, format::Toml};
 use futures::{executor::block_on, future::ok};
 use serde_json::{de, json};
-use tauri::Manager;
-use tauri_plugin_store::PluginBuilder;
+use tauri::{Manager, async_runtime::RuntimeHandle};
+use tauri_plugin_store::{PluginBuilder, Store, StoreBuilder};
 mod database;
 mod tools;
 pub use database::actions::{set_smtp_config, Database};
+use tokio::runtime::EnterGuard;
 pub use tools::checkemail::{Reachable, Reachables};
 use tools::exel::{self, Data};
 use directories::{BaseDirs, UserDirs, ProjectDirs};
+
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct PassedData2 {
     emails: Vec<Vec<String>>,
@@ -31,6 +34,7 @@ pub struct PassedData2 {
     smtptimout: Option<i64>,
 }
 
+
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct PassedData {
     emails: Vec<String>,
@@ -38,16 +42,33 @@ pub struct PassedData {
     proxyurl: Option<String>,
     smtptimout: Option<i64>,
 }
+#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
+pub struct PassedState {
+    loop_state: bool,
+}
 // #[derive(Clone, serde::Serialize)]
 // struct Payload {
 //   result: Vec<Reachable>,
 // }
+#[derive(Default)]
+struct AppState {
+    loop_state: std::sync::Mutex<bool>,
+}
+// remember to call `.manage(MyState::default())`
+#[tauri::command]
+async fn loop_state( 
+    window: tauri::Window,
+    data: PassedState,
+    state: tauri::State<'_, AppState>) -> Result<(), String> {
+  *window.state::<AppState>().loop_state.lock().unwrap() = data.loop_state;
+  Ok(())
+}
 
 #[tauri::command]
 async fn checkemails(
     window: tauri::Window,
     data: PassedData,
-    database: tauri::State<'_, Database>,
+    database: tauri::State<'_, AppState>,
 ) -> Result<Vec<Reachable>, String> {
     let fetcher = Reachables {
         listemails: data.emails,
@@ -69,7 +90,7 @@ struct SendedData {
 async fn export_xlsx(
     window: tauri::Window,
     data: String,
-    database: tauri::State<'_, Database>,
+    database: tauri::State<'_, AppState>,
 ) -> Result<(), String> {
     let my_json =
         serde_json::from_str::<SendedData>(data.as_str()).expect("could not parse data sended!");
@@ -90,28 +111,38 @@ async fn export_xlsx(
 fn main() {
     // fix_path_env::fix();
     tauri::Builder::default()
-        .manage(Database {})
+        .manage(AppState { loop_state:Mutex::new(true) })
         .plugin(PluginBuilder::default().build())
         .invoke_handler(tauri::generate_handler![
             checkemails,
             set_smtp_config,
-            export_xlsx
+            export_xlsx,
+            loop_state
         ])
         .setup(|app| {
             if let Some(user_dirs) = UserDirs::new() {
                 app.fs_scope().allow_directory(user_dirs.download_dir().unwrap(), true);
                 app.fs_scope().allow_directory(user_dirs.desktop_dir().unwrap(), true);
             };
+            let status = Arc::new(AtomicBool::new(false));
             // let window: &dyn raw_window_handle::HasRawWindowHandle = unsafe { std::mem::zeroed() }
             let main_window = app.get_window("main").unwrap();
             let (tx, rx): (Sender<Vec<Reachable>>, Receiver<Vec<Reachable>>) = mpsc::channel();
             // listen to the `event-name` (emitted on the `main` window)
-            let main = main_window.clone();
+            let main = app.get_window("main").unwrap();
             let id = main_window.listen("checkemails", move |event| {
                 let data = event.payload().expect("no data passed");
                 let _data:PassedData2 =  serde_json::from_str(data).expect("can't parse data!");
                 for list in _data.emails {
                     // parts...
+                    let this_state =  &main.state::<AppState>().loop_state;
+                    let current_state = *this_state.lock().unwrap();
+                    println!("still going bro , state {}", current_state);
+                    if !current_state {
+                        main.emit_all("job_done", "DONE".to_string()).unwrap();
+                        println!("stoped bro! x{}", current_state);
+                        break;
+                    }
                     let fetcher = Reachables {
                         listemails: list,
                         sender: _data.sender.clone(),
@@ -126,12 +157,15 @@ fn main() {
                               // emit the `event-name` event to the `main` window
                               thread_tx.clone().send(res).unwrap();
                         });
-                    });                      // emit the `event-name` event to the `main` window
+                    });
+                    let _ = child.join().unwrap();
+                                         // emit the `event-name` event to the `main` window
                     let result = rx.recv().expect("oops! the recv() panicked");
                     main.emit_all("next_pack", result).unwrap();
                 }
                 main.emit_all("job_done", "DONE".to_string()).unwrap();
             });
+            
             // unlisten to the event using the `id` returned on the `listen` function
             // an `once` API is also exposed on the `Window` struct
             // main_window.unlisten(id);

@@ -48,8 +48,6 @@ impl fmt::Display for ReachableType {
 }
 async fn check(input: CheckEmailInput) -> CheckEmailOutput{
     // Let's say we want to test the deliverability of someone@gmail.com.
-    
-
     // Verify this email, using async/await syntax.
       let result = check_email(&input).await;
     // `result` is a `Vec<CheckEmailOutput>`, where the CheckEmailOutput
@@ -62,6 +60,9 @@ pub struct Reachable {
     status:String,
     data: String,
 }
+unsafe impl Sync for Reachable {}
+unsafe impl Send for Reachable {}
+
 #[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
 pub struct Reachables {
    pub listemails: Vec<String>,

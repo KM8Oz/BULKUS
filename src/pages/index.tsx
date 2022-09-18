@@ -1,11 +1,14 @@
 import { FC, useEffect } from 'react'
 import { Link, useNavigate  } from "react-router-dom"
 import Global from "../styledcomponent"
+import { loadall } from '../tools';
 
 const index: FC = () => {
   let _navigator = useNavigate();
   useEffect(()=>{
-    _navigator("/AddPage");
+    loadall().then(()=>{
+      _navigator("/AddPage");
+    })
   }, [])
   return (
     <Global.Blocks style={{

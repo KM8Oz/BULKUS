@@ -1,10 +1,13 @@
 import React, { FC, useContext, useEffect, useMemo, useState } from "react";
 // import Database from "tauri-plugin-sql-api";
-import { checkemails, notify, SettingsDB } from "../../tools";
+import { checkemails, notify } from "../../tools";
 import styled from "styled-components";
 import { MenuContext } from "../../hooks";
 import Global from "../../styledcomponent";
-
+import { pathsettingsmy, pathsemailssmy } from "../../tools/catch";
+import { Store } from "tauri-plugin-store-api";
+const SettingsDB = new Store(pathsettingsmy.value);
+const EmailsDB = new Store(pathsemailssmy.value);
 export default ({ ...props }) => {
     const [loaded, setLoaded] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
