@@ -21,7 +21,7 @@ serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 futures = "0.3"
 directories = "4.0.1"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.0.5", features = ["api-all", "macos-private-api"] }
+tauri = { version = "1.0.8", features = ["api-all", "macos-private-api"] }
 # window-shadows = "0.2.0"
 # threadpool = "1.8.1"
 umya-spreadsheet = "0.8.1"
