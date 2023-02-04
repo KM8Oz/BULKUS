@@ -26,7 +26,7 @@ tauri = { version = "1.0.5", features = ["api-all", "macos-private-api"] }
 # threadpool = "1.8.1"
 umya-spreadsheet = "0.8.1"
 rand = "0.8.5"
-tokio = { version = "1.18.2", features = ["full"] }
+tokio = { version = "1.20.4", features = ["full"] }
 # tokio = "1.6"
 check-if-email-exists = { path = "./check-if-email-exists" } 
 # ctor = "0.1.23"
